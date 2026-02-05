@@ -116,7 +116,7 @@ export default {
             if (window.innerWidth > 550) {
                 return { height: `calc(100vh - 160px + ${this.windowTop}px)` };
             } else {
-                return { height: "calc(100vh - 160px)" };
+                return { height: "calc(50vh - 160px)" };
             }
         },
         /** Grouped stacks (PR #800 behavior), with filters + sort applied */

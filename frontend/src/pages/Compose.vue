@@ -2,67 +2,101 @@
     <transition name="slide-fade" appear>
         <div>
             <h1 v-if="isAdd" class="mb-3">{{ $t("compose") }}</h1>
-            <h1 v-else class="mb-3">
-                <Uptime :stack="globalStack" :pill="true" /> {{ stack.name }}
+            <h1 v-else class="mb-3 stack-header">
+                <Uptime :stack="globalStack" :pill="true" /> <span class="flex-grow">{{ stack.name }}</span>
                 <span v-if="$root.agentCount > 1" class="agent-name">
                     ({{ endpointDisplay }})
                 </span>
+                <BDropdown v-if="stack.isManagedByDockge && mobileScreen" right text="" variant="normal">
+                    <BDropdownItem v-if="isEditMode" :disabled="processing" @click="deployStack">
+                        <font-awesome-icon icon="rocket" class="me-1" />
+                        <span>{{ $t("deployStack") }}</span>
+                    </BDropdownItem>
+                    <BDropdownItem v-if="isEditMode" :disabled="processing" @click="saveStackDraft">
+                        <font-awesome-icon icon="save" class="me-1" />
+                        <span>{{ $t("saveStackDraft") }}</span>
+                    </BDropdownItem>
+                    <BDropdownItem v-if="!isEditMode" @click="enableEditMode">
+                        <font-awesome-icon icon="pen" class="me-1" />
+                        <span>{{ $t("editStack") }}</span>
+                    </BDropdownItem>
+                    <BDropdownItem v-if="!isEditMode && !active" :disabled="processing" @click="startStack">
+                        <font-awesome-icon icon="play" class="me-1" />
+                        <span>{{ $t("startStack") }}</span>
+                    </BDropdownItem>
+                    <BDropdownItem v-if="!isEditMode && active" :disabled="processing" @click="restartStack">
+                        <font-awesome-icon icon="rotate" class="me-1" />
+                        <span>{{ $t("restartStack") }}</span>
+                    </BDropdownItem>
+                    <BDropdownItem v-if="!isEditMode" :disabled="processing" @click="updateStack">
+                        <font-awesome-icon icon="cloud-arrow-down" class="me-1" />
+                        <span>{{ $t("updateStack") }}</span>
+                    </BDropdownItem>
+                    <BDropdownItem v-if="!isEditMode && active" :disabled="processing" @click="stopStack">
+                        <font-awesome-icon icon="stop" class="me-1" />
+                        <span>{{ $t("stopStack") }}</span>
+                    </BDropdownItem>
+                    <BDropdownItem @click="downStack">
+                        <font-awesome-icon icon="stop" class="me-1" />
+                        <span>{{ $t("downStack") }}</span>
+                    </BDropdownItem>
+                </BDropdown>
             </h1>
 
-            <div v-if="stack.isManagedByDockge" class="mb-3">
+            <div v-if="stack.isManagedByDockge && !mobileScreen" class="mb-3">
                 <div class="btn-group me-2" role="group">
                     <button v-if="isEditMode" class="btn btn-primary" :disabled="processing" @click="deployStack">
                         <font-awesome-icon icon="rocket" class="me-1" />
-                        {{ $t("deployStack") }}
+                        <span>{{ $t("deployStack") }}</span>
                     </button>
 
                     <button v-if="isEditMode" class="btn btn-normal" :disabled="processing" @click="saveStack">
                         <font-awesome-icon icon="save" class="me-1" />
-                        {{ $t("saveStackDraft") }}
+                        <span>{{ $t("saveStackDraft") }}</span>
                     </button>
 
                     <button v-if="!isEditMode" class="btn btn-secondary" :disabled="processing" @click="enableEditMode">
                         <font-awesome-icon icon="pen" class="me-1" />
-                        {{ $t("editStack") }}
+                        <span>{{ $t("editStack") }}</span>
                     </button>
 
                     <button v-if="!isEditMode && !active" class="btn btn-primary" :disabled="processing" @click="startStack">
                         <font-awesome-icon icon="play" class="me-1" />
-                        {{ $t("startStack") }}
+                        <span>{{ $t("startStack") }}</span>
                     </button>
 
                     <button v-if="!isEditMode && active" class="btn btn-normal " :disabled="processing" @click="restartStack">
                         <font-awesome-icon icon="rotate" class="me-1" />
-                        {{ $t("restartStack") }}
+                        <span>{{ $t("restartStack") }}</span>
                     </button>
 
-                    <button v-if="!isEditMode" class="btn btn-normal" :disabled="processing" @click="updateStack">
+                    <button v-if="!isEditMode" class="btn btn-normal" :disabled="processing" @click="updateStack">!
                         <font-awesome-icon icon="cloud-arrow-down" class="me-1" />
-                        {{ $t("updateStack") }}
+                        <span>{{ $t("updateStack") }}</span>
                     </button>
 
                     <button v-if="!isEditMode && active" class="btn btn-normal" :disabled="processing" @click="stopStack">
                         <font-awesome-icon icon="stop" class="me-1" />
-                        {{ $t("stopStack") }}
+                        <span>{{ $t("stopStack") }}</span>
                     </button>
 
                     <BDropdown right text="" variant="normal">
                         <BDropdownItem @click="downStack">
                             <font-awesome-icon icon="stop" class="me-1" />
-                            {{ $t("downStack") }}
+                            <span>{{ $t("downStack") }}</span>
                         </BDropdownItem>
                     </BDropdown>
                 </div>
 
                 <button v-if="isEditMode && !isAdd" class="btn btn-normal" :disabled="processing" @click="discardStack">{{ $t("discardStack") }}</button>
-                <button v-if="!isEditMode && !errorDelete" class="btn btn-danger" :disabled="processing" @click="showDeleteDialog = !showDeleteDialog">
+                <!-- <button v-if="!isEditMode && !errorDelete" class="btn btn-danger" :disabled="processing" @click="showDeleteDialog = !showDeleteDialog">
                     <font-awesome-icon icon="trash" class="me-1" />
                     {{ $t("deleteStack") }}
                 </button>
                 <button v-if="errorDelete" class="btn btn-danger" :disabled="processing" @click="showForceDeleteDialog = !showForceDeleteDialog">
                     <font-awesome-icon icon="trash" class="me-1" />
                     {{ $t("forceDeleteStack") }}
-                </button>
+                </button> -->
             </div>
 
             <!-- URLs -->
@@ -111,7 +145,7 @@
                     </div>
 
                     <!-- Containers -->
-                    <h4 class="mb-3">{{ $tc("container", 2) }}</h4>
+                    <h4 class="mb-3 hide-sm">{{ $tc("container", 2) }}</h4>
 
                     <div v-if="isEditMode" class="input-group mb-3">
                         <input
@@ -375,6 +409,13 @@ import NetworkInput from "../components/NetworkInput.vue";
 import dotenv from "dotenv";
 import { ref } from "vue";
 
+const useMatchMedia = (query) => {
+  const match = window.matchMedia(query);
+  const isMatching = ref(match.matches);
+  match.addEventListener('change', e => isMatching.value = e.matches);
+  return isMatching;
+}
+
 const template = `
 services:
   nginx:
@@ -493,6 +534,10 @@ export default {
         isAdd() {
             return this.$route.path === "/compose" && !this.submitted;
         },
+
+        mobileScreen() {
+            return useMatchMedia('(max-width: 550px)');
+        }, 
 
         /**
          * Get the stack from the global stack list, because it may contain more real-time data like status
@@ -1015,5 +1060,31 @@ export default {
 .agent-name {
     font-size: 13px;
     color: $dark-font-color3;
+}
+
+@media (max-width: 770px){
+  .btn-group.me-2 {
+    width:100%;
+    display:flex;
+    flex-wrap: nowrap;
+    .btn {
+      span {
+        display:none;
+      }
+    }
+  }
+
+  .stack-header {
+    gap:12px;
+    display: flex;
+
+    > span:last-of-type {
+      flex-grow: 1;
+    }
+  }
+
+  .hide-sm {
+    display: none !important;
+  }
 }
 </style>

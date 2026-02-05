@@ -1,7 +1,7 @@
 <template>
     <div class="shadow-box big-padding mb-3 container">
         <div class="row">
-            <div class="col-5">
+            <div class="col-6 col-md-12 col-lg-5 col-xl-5">
                 <h4>{{ name }}</h4>
                 <div class="image mb-2">
                     <span class="me-1">{{ imageName }}:</span><span class="tag">{{ imageTag }}</span>
@@ -14,33 +14,33 @@
                     </a>
                 </div>
             </div>
-            <div class="col-7">
+            <div class="col-6 col-md-12 col-lg-7 col-xl-7">
                 <div class="function">
                     <div class="btn-group me-2" role="group">
                         <router-link v-if="!isEditMode && (status === 'running' || status === 'healthy')" class="btn btn-normal" :to="terminalRouteLink" disabled="">
                             <font-awesome-icon icon="terminal" />
-                            Bash
+                            <span>Bash</span>
                         </router-link>
                         <button v-if="this.serviceCount > 1 && !isEditMode && status !== 'running' && status !== 'healthy'"
                                 class="btn btn-primary"
                                 :disabled="processing"
                                 @click="startService">
                             <font-awesome-icon icon="play" class="me-1" />
-                            {{ $t("startStack") }}
+                            <span>{{ $t("startStack") }}</span>
                         </button>
                         <button v-if="this.serviceCount > 1 && !isEditMode && (status === 'running' || status === 'healthy' || status === 'unhealthy')"
                                 class="btn btn-normal"
                                 :disabled="processing"
                                 @click="stopService">
                             <font-awesome-icon icon="stop" class="me-1" />
-                            {{ $t("stopStack") }}
+                            <span>{{ $t("stopStack") }}</span>
                         </button>
                         <button v-if="this.serviceCount > 1 && !isEditMode && (status === 'running' || status === 'healthy' || status === 'unhealthy')"
                                 class="btn btn-normal"
                                 :disabled="processing"
                                 @click="restartService">
                             <font-awesome-icon icon="rotate" class="me-1" />
-                            {{ $t("restartStack") }}
+                            <span>{{ $t("restartStack") }}</span>
                         </button>
                     </div>
                 </div>
@@ -53,10 +53,10 @@
                 {{ $t("Edit") }}
             </button>
             <button v-if="false" class="btn btn-normal me-2">Rename</button>
-            <button class="btn btn-danger me-2" @click="remove">
+            <!-- <button class="btn btn-danger me-2" @click="remove">
                 <font-awesome-icon icon="trash" />
                 {{ $t("deleteContainer") }}
-            </button>
+            </button> -->
         </div>
         <div v-else-if="statsInstances.length > 0" class="mt-2">
             <div class="d-flex align-items-center gap-3">
@@ -246,8 +246,10 @@ export default defineComponent({
         },
 
         bgStyle() {
-            if (this.status === "running" || this.status === "healthy") {
+            if (this.status === "running" ) {
                 return "bg-primary";
+            } else if (this.status === "healthy") {
+                return "bg-success";
             } else if (this.status === "unhealthy") {
                 return "bg-danger";
             } else {
@@ -402,7 +404,7 @@ export default defineComponent({
         display: flex;
         height: 100%;
         width: 100%;
-        align-items: center;
+        align-items: start;
         justify-content: end;
     }
 
@@ -410,5 +412,18 @@ export default defineComponent({
         font-size: 0.8rem;
         color: #6c757d;
     }
+}
+
+@media (max-width: 770px) {
+  .btn-group.me-2 {
+    .btn {
+      padding-left: 16px;
+      padding-right: 16px;
+
+      span {
+        display:none;
+      }
+    }
+  }
 }
 </style>

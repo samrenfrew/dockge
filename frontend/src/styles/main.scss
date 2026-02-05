@@ -3,7 +3,9 @@
 @import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 
 #app {
-    font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial, noto sans, sans-serif, apple color emoji, segoe ui emoji, segoe ui symbol, noto color emoji;
+    font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial,
+        noto sans, sans-serif, apple color emoji, segoe ui emoji,
+        segoe ui symbol, noto color emoji;
 }
 
 h1 {
@@ -55,7 +57,6 @@ textarea.form-control {
         }
     }
 }
-
 
 // optgroup
 optgroup {
@@ -122,7 +123,10 @@ optgroup {
     color: white;
     background: $primary-gradient;
 
-    &:hover, &:active, &:focus, &.active {
+    &:hover,
+    &:active,
+    &:focus,
+    &.active {
         color: white;
         background: $primary-gradient-active;
         border-color: $highlight;
@@ -134,7 +138,7 @@ optgroup {
 }
 
 .btn-normal {
-    $bg-color: #F5F5F5;
+    $bg-color: #f5f5f5;
 
     background-color: $bg-color;
     border-color: $bg-color;
@@ -149,7 +153,10 @@ optgroup {
 .btn-warning {
     color: white;
 
-    &:hover, &:active, &:focus, &.active {
+    &:hover,
+    &:active,
+    &:focus,
+    &.active {
         color: white;
     }
 }
@@ -157,13 +164,16 @@ optgroup {
 .btn-info {
     color: white;
 
-    &:hover, &:active, &:focus, &.active {
+    &:hover,
+    &:active,
+    &:focus,
+    &.active {
         color: white;
     }
 }
 
 .btn-dark {
-    background-color: #161B22;
+    background-color: #161b22;
 }
 
 .btn-outline-normal {
@@ -210,7 +220,7 @@ optgroup {
                 font-weight: bold;
             }
 
-            td:nth-child(-n+3) {
+            td:nth-child(-n + 3) {
                 text-align: center;
             }
 
@@ -238,11 +248,13 @@ optgroup {
     background-color: #090c10;
     color: $dark-font-color;
 
-    mark, .mark {
+    mark,
+    .mark {
         background-color: #b6ad86;
     }
 
-    &::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb {
+    &::-webkit-scrollbar-thumb,
+    ::-webkit-scrollbar-thumb {
         background: $dark-border-color;
     }
 
@@ -299,11 +311,13 @@ optgroup {
         background-color: $dark-bg;
     }
 
-    .form-control, .form-select {
+    .form-control,
+    .form-select {
         border-color: $dark-border-color;
     }
 
-    .form-control:disabled, .form-control[readonly] {
+    .form-control:disabled,
+    .form-control[readonly] {
         background-color: #232f3b;
         opacity: 1;
     }
@@ -313,7 +327,8 @@ optgroup {
         color: $dark-font-color;
     }
 
-    .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    .nav-pills .nav-link.active,
+    .nav-pills .show > .nav-link {
         color: $dark-font-color2;
         background: $primary-gradient;
 
@@ -325,6 +340,10 @@ optgroup {
     .bg-primary {
         color: $dark-font-color2;
         background: $primary-gradient;
+    }
+
+    .bg-success {
+        background: $success;
     }
 
     .btn-secondary {
@@ -348,7 +367,10 @@ optgroup {
     .btn-warning {
         color: $dark-font-color2;
 
-        &:hover, &:active, &:focus, &.active {
+        &:hover,
+        &:active,
+        &:focus,
+        &.active {
             color: $dark-font-color2;
         }
     }
@@ -420,7 +442,10 @@ optgroup {
 }
 
 // Floating Label
-.form-floating > .form-control:focus ~ label::after, .form-floating > .form-control:not(:placeholder-shown) ~ label::after, .form-floating > .form-control-plaintext ~ label::after, .form-floating > .form-select ~ label::after {
+.form-floating > .form-control:focus ~ label::after,
+.form-floating > .form-control:not(:placeholder-shown) ~ label::after,
+.form-floating > .form-control-plaintext ~ label::after,
+.form-floating > .form-select ~ label::after {
     background-color: transparent;
 }
 
@@ -429,7 +454,6 @@ optgroup {
         color: $dark-font-color3 !important;
     }
 }
-
 
 /*
  * Transitions
@@ -485,7 +509,7 @@ optgroup {
 
     @media (max-width: 770px) {
         &.scrollbar {
-            height: calc(100% - 97px);
+            height: calc(50% - 97px);
         }
     }
 
@@ -542,8 +566,7 @@ optgroup {
     border-color: #4caf50;
 }
 
-
-[contenteditable=true] {
+[contenteditable="true"] {
     transition: all $easing-in 0.2s;
     background-color: rgba(239, 239, 239, 0.7);
     border-radius: 8px;
@@ -573,7 +596,6 @@ optgroup {
         color: #eee;
     }
     */
-
 }
 
 .action {
@@ -593,7 +615,6 @@ optgroup {
     color: $primary;
 }
 
-
 h5.settings-subheading::after {
     content: "";
     display: block;
@@ -603,7 +624,8 @@ h5.settings-subheading::after {
 }
 
 /* required class */
-.code-editor, .css-editor {
+.code-editor,
+.css-editor {
     /* we dont use `language-` classes anymore so thats why we need to add background and text color manually */
 
     border-radius: 1rem;
@@ -615,7 +637,6 @@ h5.settings-subheading::after {
         border: 1px solid $dark-border-color;
     }
 }
-
 
 $shadow-box-padding: 20px;
 
@@ -654,14 +675,15 @@ $shadow-box-padding: 20px;
 }
 
 code {
-    padding: .2em .4em;
+    padding: 0.2em 0.4em;
     margin: 0;
     font-size: 85%;
     white-space: break-spaces;
     background-color: rgba(239, 239, 239, 0.15);
 
     border-radius: 6px;
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
     color: black;
 
     .dark & {
@@ -673,18 +695,18 @@ code {
     color: $dark-font-color3;
 }
 
-
 .cm-gutters {
-	background-color: transparent !important;
+    background-color: transparent !important;
 }
 .dark [contenteditable="true"] {
-	background-color: transparent !important;
+    background-color: transparent !important;
 }
 .cm-editor {
-	background-color: transparent !important;
+    background-color: transparent !important;
 }
-.cm-activeLine, .cm-activeLineGutter {
-	background-color: transparent !important;
+.cm-activeLine,
+.cm-activeLineGutter {
+    background-color: transparent !important;
 }
 .cm-selectionBackground {
     background-color: #74c2ff3d !important;
