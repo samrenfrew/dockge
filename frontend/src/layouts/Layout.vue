@@ -10,8 +10,8 @@
         </div>
 
         <!-- Desktop header -->
-        <header v-if="! $root.isMobile" class="d-flex flex-wrap justify-content-space-between py-3 mb-3 border-bottom">
-            <router-link to="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <header class="d-flex flex-wrap justify-content-space-between py-3 mb-3 border-bottom">
+            <router-link to="/" class="d-flex align-items-center mb-md-0 me-md-auto text-dark text-decoration-none">
                 <object class="bi me-2 ms-4" width="40" height="40" data="/icon.svg" />
                 <span class="fs-4 title">Dockge</span>
             </router-link>
@@ -21,13 +21,13 @@
             </a>
 
             <ul class="nav nav-pills">
-                <li v-if="$root.loggedIn" class="nav-item me-2">
+                <!-- <li v-if="$root.loggedIn" class="nav-item me-2">
                     <router-link to="/" class="nav-link">
                         <font-awesome-icon icon="home" /> {{ $t("home") }}
                     </router-link>
-                </li>
+                </li> -->
 
-                <li v-if="$root.loggedIn" class="nav-item me-2">
+                <li v-if="$root.loggedIn && !$root.isMobile" class="nav-item me-2">
                     <router-link to="/console" class="nav-link">
                         <font-awesome-icon icon="terminal" /> {{ $t("console") }}
                     </router-link>
@@ -54,11 +54,17 @@
 
                             <!-- Functions -->
 
-                            <!--<li>
-                                <router-link to="/registry" class="dropdown-item" :class="{ active: $route.path.includes('settings') }">
-                                    <font-awesome-icon icon="warehouse" /> {{ $t("registry") }}
+                            <li v-if="$root.isMobile">
+                                <router-link to="/console" class="dropdown-item" :class="{ active: $route.path.includes('console') }">
+                                    <font-awesome-icon icon="terminal" /> {{ $t("console") }}
                                 </router-link>
-                            </li>-->
+                            </li>
+
+                            <li v-if="$root.isMobile">
+                                <router-link to="/compose" class="dropdown-item" :class="{ active: $route.path.endsWith('compose') }">
+                                    <font-awesome-icon icon="plus" /> {{ $t("compose") }}
+                                </router-link>
+                            </li>
 
                             <li>
                                 <button class="dropdown-item" @click="scanFolder">
@@ -106,12 +112,6 @@ export default {
         Login,
     },
 
-    data() {
-        return {
-
-        };
-    },
-
     computed: {
 
         // Theme or Mobile
@@ -129,18 +129,6 @@ export default {
                 return false;
             }
         },
-
-    },
-
-    watch: {
-
-    },
-
-    mounted() {
-
-    },
-
-    beforeUnmount() {
 
     },
 
@@ -210,10 +198,11 @@ main {
 .nav {
     margin-right: 25px;
     margin-left: 25px;
+    flex-grow: 1;
+      justify-content: flex-end;
 
     @media (max-width: 550px) {
-      flex-grow: 1;
-      justify-content: space-between;
+      
     }
 }
 

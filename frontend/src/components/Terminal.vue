@@ -97,7 +97,10 @@ export default {
 
         // Bind to a div
         this.terminal.open(this.$refs.terminal);
-        this.terminal.focus();
+        // Skip auto-focus on touch devices to avoid triggering mobile keyboard
+        if (!('ontouchstart' in window)) {
+            this.terminal.focus();
+        }
 
         // Add right-click context menu handler for paste
         this.$refs.terminal.addEventListener('contextmenu', this.handleContextMenu);

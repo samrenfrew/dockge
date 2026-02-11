@@ -1,8 +1,8 @@
 <template>
     <div class="container-fluid">
         <div class="row">
-            <div v-if="!$root.isMobile" class="col-12 col-md-4 col-xl-3">
-                <div>
+            <div class="col-12 col-md-4 col-xl-3">
+                <div v-if="!$root.isMobile">
                     <router-link to="/compose" class="btn btn-primary mb-3"><font-awesome-icon icon="plus" /> {{ $t("compose") }}</router-link>
                 </div>
                 <StackList :scrollbar="true" />
@@ -26,7 +26,7 @@ export default {
     },
     data() {
         return {
-            height: 0
+            height: 0,
         };
     },
     mounted() {
@@ -38,5 +38,9 @@ export default {
 <style lang="scss" scoped>
 .container-fluid {
     width: 98%;
+
+    // @media (max-width: 550px){
+    //   width: 100%;
+    // }
 }
 </style>

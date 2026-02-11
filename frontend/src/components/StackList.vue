@@ -8,7 +8,7 @@
                     {{ $t("Select") }}
                 </button>
 
-                <div class="placeholder"></div>
+                <!-- <div class="placeholder"></div> -->
 
                 <div class="search-wrapper">
                     <a v-if="searchText == ''" class="search-icon">

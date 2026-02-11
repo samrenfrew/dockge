@@ -1,17 +1,10 @@
 <template>
-    <div class="shadow-box big-padding mb-3 container">
+    <div class="shadow-box big-padding mb-3 container" :class="status">
         <div class="row">
             <div class="col-6 col-md-12 col-lg-5 col-xl-5">
                 <h4>{{ name }}</h4>
                 <div class="image mb-2">
                     <span class="me-1">{{ imageName }}:</span><span class="tag">{{ imageTag }}</span>
-                </div>
-                <div v-if="!isEditMode">
-                    <span class="badge me-1" :class="bgStyle">{{ status }}</span>
-
-                    <a v-for="port in envsubstService.ports" :key="port" :href="parsePort(port).url" target="_blank">
-                        <span class="badge me-1 bg-secondary">{{ parsePort(port).display }}</span>
-                    </a>
                 </div>
             </div>
             <div class="col-6 col-md-12 col-lg-7 col-xl-7">
@@ -44,6 +37,13 @@
                         </button>
                     </div>
                 </div>
+            </div>
+
+            <div v-if="!isEditMode">
+              <span class="badge me-1" :class="bgStyle">{{ status }}</span>
+              <a v-for="port in envsubstService.ports" :key="port" :href="parsePort(port).url" target="_blank">
+                  <span class="badge me-1 bg-secondary">{{ parsePort(port).display }}</span>
+              </a>
             </div>
         </div>
 
@@ -412,6 +412,22 @@ export default defineComponent({
         font-size: 0.8rem;
         color: #6c757d;
     }
+}
+
+.container.shadow-box {
+  border-left: 2px solid transparent;
+
+  &.healthy {
+    border-left-color: $success;
+  }
+
+  &.running {
+    border-left-color: $primary;
+  }
+
+  &.unhealthy {
+    border-left-color: $danger;
+  }
 }
 
 @media (max-width: 770px) {

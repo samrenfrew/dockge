@@ -8,6 +8,7 @@ export default defineComponent({
             statusPageTheme: "light",
             forceStatusPageTheme: false,
             path: "",
+            isMobile: false,
         };
     },
 
@@ -61,6 +62,17 @@ export default defineComponent({
 
         document.body.classList.add(this.theme);
         this.updateThemeColorMeta();
+
+        // Mobile screen detection (max-width: 550px) - shared across all views
+        this._mobileQuery = window.matchMedia("(max-width: 550px)");
+        this.isMobile = this._mobileQuery.matches;
+        this._mobileQueryListener = (e: MediaQueryListEvent) => { this.isMobile = e.matches; };
+        this._mobileQuery.addEventListener("change", this._mobileQueryListener);
+    },
+    unmounted() {
+        if (this._mobileQuery) {
+            this._mobileQuery.removeEventListener("change", this._mobileQueryListener);
+        }
     },
 
     methods: {
