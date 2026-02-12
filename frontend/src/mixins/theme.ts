@@ -3,7 +3,9 @@ import { defineComponent } from "vue";
 export default defineComponent({
     data() {
         return {
-            system: (window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light",
+            system: window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light",
             userTheme: localStorage.theme,
             statusPageTheme: "light",
             forceStatusPageTheme: false,
@@ -22,7 +24,7 @@ export default defineComponent({
 
         isDark() {
             return this.theme === "dark";
-        }
+        },
     },
 
     watch: {
@@ -51,27 +53,32 @@ export default defineComponent({
         heartbeatBarTheme(to, from) {
             document.body.classList.remove(from);
             document.body.classList.add(this.heartbeatBarTheme);
-        }
+        },
     },
 
     mounted() {
         // Default Dark
-        if (! this.userTheme) {
+        if (!this.userTheme) {
             this.userTheme = "dark";
         }
 
         document.body.classList.add(this.theme);
         this.updateThemeColorMeta();
 
-        // Mobile screen detection (max-width: 550px) - shared across all views
-        this._mobileQuery = window.matchMedia("(max-width: 550px)");
+        // Mobile screen detection (max-width: 767px) - shared across all views
+        this._mobileQuery = window.matchMedia("(max-width: 767px)");
         this.isMobile = this._mobileQuery.matches;
-        this._mobileQueryListener = (e: MediaQueryListEvent) => { this.isMobile = e.matches; };
+        this._mobileQueryListener = (e: MediaQueryListEvent) => {
+            this.isMobile = e.matches;
+        };
         this._mobileQuery.addEventListener("change", this._mobileQueryListener);
     },
     unmounted() {
         if (this._mobileQuery) {
-            this._mobileQuery.removeEventListener("change", this._mobileQueryListener);
+            this._mobileQuery.removeEventListener(
+                "change",
+                this._mobileQueryListener,
+            );
         }
     },
 
@@ -82,11 +89,14 @@ export default defineComponent({
          */
         updateThemeColorMeta() {
             if (this.theme === "dark") {
-                document.querySelector("#theme-color").setAttribute("content", "#161B22");
+                document
+                    .querySelector("#theme-color")
+                    .setAttribute("content", "#161B22");
             } else {
-                document.querySelector("#theme-color").setAttribute("content", "#5cdd8b");
+                document
+                    .querySelector("#theme-color")
+                    .setAttribute("content", "#5cdd8b");
             }
-        }
-    }
+        },
+    },
 });
-

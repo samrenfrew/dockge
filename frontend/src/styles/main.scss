@@ -3,9 +3,18 @@
 @import "bootstrap-vue-next/dist/bootstrap-vue-next.css";
 
 #app {
-    font-family: BlinkMacSystemFont, segoe ui, Roboto, helvetica neue, Arial,
-        noto sans, sans-serif, apple color emoji, segoe ui emoji,
-        segoe ui symbol, noto color emoji;
+    font-family:
+        BlinkMacSystemFont,
+        segoe ui,
+        Roboto,
+        helvetica neue,
+        Arial,
+        noto sans,
+        sans-serif,
+        apple color emoji,
+        segoe ui emoji,
+        segoe ui symbol,
+        noto color emoji;
 }
 
 h1 {
@@ -196,7 +205,7 @@ optgroup {
     }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 767px) {
     .table-shadow-box {
         padding: 10px !important;
 
@@ -416,7 +425,7 @@ optgroup {
         }
     }
 
-    @media (max-width: 550px) {
+    @media (max-width: 767px) {
         .table-shadow-box {
             tbody {
                 .shadow-box {
@@ -507,9 +516,9 @@ optgroup {
         overflow-y: auto;
     }
 
-    @media (max-width: 770px) {
+    @media (max-width: 767px) {
         &.scrollbar {
-            height: calc(50% - 97px);
+            height: calc(100% - 60px);
         }
     }
 
@@ -662,13 +671,13 @@ $shadow-box-padding: 20px;
     }
 }
 
-@media (max-width: 770px) {
+@media (max-width: 767px) {
     .toast-container {
         margin-bottom: 100px !important;
     }
 }
 
-@media (max-width: 550px) {
+@media (max-width: 767px) {
     .toast-container {
         margin-bottom: 126px !important;
     }
@@ -682,7 +691,8 @@ code {
     background-color: rgba(239, 239, 239, 0.15);
 
     border-radius: 6px;
-    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    font-family:
+        SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
         "Courier New", monospace;
     color: black;
 
@@ -713,6 +723,10 @@ code {
 }
 .cm-focused {
     outline: none !important;
+}
+
+.dropdown-item {
+    min-height: 40px;
 }
 
 // Localization

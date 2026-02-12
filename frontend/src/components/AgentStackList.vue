@@ -35,7 +35,7 @@ defineProps<AgentStackListProps>();
     }
 }
 
-@media (max-width: 770px) {
+@media (max-width: 767px) {
     .group-header {
         margin: -20px;
         margin-bottom: 10px;

@@ -201,7 +201,7 @@ main {
     flex-grow: 1;
       justify-content: flex-end;
 
-    @media (max-width: 550px) {
+    @media (max-width: 767px) {
       
     }
 }

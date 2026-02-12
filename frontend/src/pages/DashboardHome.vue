@@ -7,7 +7,7 @@
 
             <div class="row first-row">
                 <!-- Left -->
-                <div class="col-md-7">
+                <div class="col-lg-7">
                     <!-- Stats -->
                     <div class="shadow-box big-padding text-center mb-4">
                         <div class="row">
@@ -35,7 +35,7 @@
                     <button class="btn-normal btn mb-4" @click="convertDockerRun">{{ $t("Convert to Compose") }}</button>
                 </div>
                 <!-- Right -->
-                <div class="col-md-5">
+                <div class="col-lg-5">
                     <!-- Agent List -->
                     <div class="shadow-box big-padding">
                         <h4 class="mb-3">{{ $tc("dockgeAgent", 2) }} <span class="badge bg-warning" style="font-size: 12px;">beta</span></h4>
@@ -352,7 +352,7 @@ table {
         transition: all ease-in-out 0.2ms;
     }
 
-    @media (max-width: 550px) {
+    @media (max-width: 767px) {
         table-layout: fixed;
         overflow-wrap: break-word;
     }

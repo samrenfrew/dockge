@@ -63,6 +63,10 @@
                 </div>
             </div>
         </div>
+
+        <div class="mb-4">
+          <BFormCheckbox id="hideDelete" name="hideDelete" v-model="$root.hideDelete" value="true" unchecked-value="false"> Hide the delete buttons?</BFormCheckbox>
+        </div>
     </div>
 </template>
 

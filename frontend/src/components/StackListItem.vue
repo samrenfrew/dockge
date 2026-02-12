@@ -3,7 +3,7 @@
         <Uptime :stack="stack" :fixed-width="true" class="me-2" />
         <div class="title">
             <span>{{ stackName }}</span>
-            <div v-if="$root.agentCount > 1" class="endpoint">{{ endpointDisplay }}</div>
+            <span v-if="$root.agentCount > 1" class="ms-1 endpoint">({{ endpointDisplay }})</span>
         </div>
     </router-link>
 </template>
@@ -54,7 +54,7 @@ export default {
     },
     computed: {
         endpointDisplay() {
-            return this.$root.endpointDisplayFunction(this.stack.endpoint);
+            return this.$root.endpointDisplayFunction(this.stack.endpoint) || "local";
         },
         url() {
             if (this.stack.endpoint) {

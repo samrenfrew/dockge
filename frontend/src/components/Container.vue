@@ -9,7 +9,7 @@
             </div>
             <div class="col-6 col-md-12 col-lg-7 col-xl-7">
                 <div class="function">
-                    <div class="btn-group me-2" role="group">
+                    <div class="btn-group" role="group">
                         <router-link v-if="!isEditMode && (status === 'running' || status === 'healthy')" class="btn btn-normal" :to="terminalRouteLink" disabled="">
                             <font-awesome-icon icon="terminal" />
                             <span>Bash</span>
@@ -430,8 +430,8 @@ export default defineComponent({
   }
 }
 
-@media (max-width: 770px) {
-  .btn-group.me-2 {
+@media (max-width: 767px) {
+  .btn-group {
     .btn {
       padding-left: 16px;
       padding-right: 16px;

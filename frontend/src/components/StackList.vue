@@ -1,5 +1,5 @@
 <template>
-    <div class="shadow-box mb-3" :style="boxStyle">
+    <div class="shadow-box mb-3">
         <div class="list-header">
             <div class="header-top">
                 <!-- TODO -->
@@ -52,7 +52,7 @@
             </div>
         </div>
 
-        <div ref="stackList" class="stack-list" :class="{ scrollbar: scrollbar }" :style="stackListStyle">
+        <div ref="stackList" class="stack-list" :class="{ scrollbar: scrollbar }">
             <div v-if="flatStackList.length === 0" class="text-center mt-3">
                 <router-link to="/compose">{{ $t("addFirstStackMsg") }}</router-link>
             </div>
@@ -311,9 +311,13 @@ export default {
 @import "../styles/vars.scss";
 
 .shadow-box {
-    height: calc(100vh - 150px);
+    height: calc(100vh - 160px);
     position: sticky;
     top: 10px;
+
+    @media (max-width: 767px){
+      height: 40vh;
+    }
 }
 
 .small-padding {
@@ -338,6 +342,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 10px;
 }
 
 .header-filter {
@@ -345,12 +350,12 @@ export default {
     align-items: center;
 }
 
-@media (max-width: 770px) {
-    .list-header {
-        margin: -20px;
-        margin-bottom: 10px;
-        padding: 5px;
-    }
+@media (max-width: 767px) {
+    // .list-header {
+    //     margin: -20px;
+    //     margin-bottom: 10px;
+    //     padding: 5px;
+    // }
 }
 
 .search-wrapper {
@@ -411,5 +416,19 @@ export default {
     display: flex;
     align-items: center;
     user-select: none;
+}
+
+.update-all-wrapper {
+  white-space: nowrap;
+
+  @media (max-width: 767px){
+    button {
+      font-size: 14px;
+      
+      svg {
+        display:none;
+      }
+    }
+  }
 }
 </style>

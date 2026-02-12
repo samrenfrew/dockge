@@ -6,7 +6,7 @@
 
         <div class="shadow-box shadow-box-settings">
             <div class="row">
-                <div v-if="showSubMenu" class="settings-menu col-lg-3 col-md-5">
+                <div class="settings-menu col-lg-3 col-md-5">
                     <router-link
                         v-for="(item, key) in subMenus"
                         :key="key"
@@ -16,14 +16,6 @@
                             {{ item.title }}
                         </div>
                     </router-link>
-
-                    <!-- Logout Button -->
-                    <a v-if="$root.isMobile && $root.loggedIn && $root.socket.token !== 'autoLogin'" class="logout" @click.prevent="$root.logout">
-                        <div class="menu-item">
-                            <font-awesome-icon icon="sign-out-alt" />
-                            {{ $t("Logout") }}
-                        </div>
-                    </a>
                 </div>
                 <div class="settings-content col-lg-9 col-md-7">
                     <div v-if="currentPage" class="settings-content-header">
@@ -111,7 +103,7 @@ export default {
          * For desktop only, on mobile do nothing
          */
         loadGeneralPage() {
-            if (!this.currentPage && !this.$root.isMobile) {
+            if (!this.currentPage && !this.$root.isMobiles) {
                 this.$router.push("/settings/appearance");
             }
         },
