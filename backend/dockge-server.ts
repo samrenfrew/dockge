@@ -213,6 +213,8 @@ export class DockgeServer {
         // Create Socket.io
         this.io = new socketIO.Server(this.httpServer, {
             cors,
+            // Tolerate a backgrounded or suspended tab for about 2.5 minutes before dropping it
+            pingTimeout: 120000,
             allowRequest: (req, callback) => {
                 let isOriginValid = true;
                 const bypass = isDev || process.env.UPTIME_KUMA_WS_ORIGIN_CHECK === "bypass";

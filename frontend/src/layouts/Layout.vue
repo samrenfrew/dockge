@@ -1,6 +1,6 @@
 <template>
     <div :class="classes">
-        <div v-if="! $root.socketIO.connected && ! $root.socketIO.firstConnect" class="lost-connection">
+        <div v-if="! $root.socketIO.connected && $root.socketIO.showLostConnection" class="lost-connection">
             <div class="container-fluid">
                 {{ $root.socketIO.connectionErrorMsg }}
                 <div v-if="$root.socketIO.showReverseProxyGuide">

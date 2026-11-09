@@ -9,6 +9,10 @@ let socket : Socket;
 
 let terminalMap : Map<string, Terminal> = new Map();
 
+// Quick reconnects after a tab switch should not flash the banner
+const LOST_CONNECTION_GRACE_MS = 4000;
+let lostConnectionTimeout : ReturnType<typeof setTimeout> | undefined;
+
 export default defineComponent({
     data() {
         return {
@@ -21,6 +25,7 @@ export default defineComponent({
                 connectionErrorMsg: `${this.$t("Cannot connect to the socket server.")} ${this.$t("Reconnecting...")}`,
                 showReverseProxyGuide: true,
                 connecting: false,
+                showLostConnection: false,
             },
             info: {
 
@@ -167,7 +172,28 @@ export default defineComponent({
                 this.socketIO.connecting = true;
             }, 1500);
 
-            socket = io(url);
+            socket = io(url, {
+                reconnectionDelay: 500,
+                reconnectionDelayMax: 3000,
+            });
+
+            const markDisconnected = () => {
+                if (!lostConnectionTimeout) {
+                    lostConnectionTimeout = setTimeout(() => {
+                        this.socketIO.showLostConnection = true;
+                    }, LOST_CONNECTION_GRACE_MS);
+                }
+            };
+
+            // Reconnect straight away when the tab comes back, instead of waiting for the backoff
+            const reconnectIfNeeded = () => {
+                if (document.visibilityState === "visible" && socket.disconnected) {
+                    socket.connect();
+                }
+            };
+            document.addEventListener("visibilitychange", reconnectIfNeeded);
+            window.addEventListener("pageshow", reconnectIfNeeded);
+            window.addEventListener("online", reconnectIfNeeded);
 
             // Handling events from agents
             let agentSocket = new AgentSocket();
@@ -179,6 +205,9 @@ export default defineComponent({
                 console.log("Connected to the socket server");
 
                 clearTimeout(connectingMsgTimeout);
+                clearTimeout(lostConnectionTimeout);
+                lostConnectionTimeout = undefined;
+                this.socketIO.showLostConnection = false;
                 this.socketIO.connecting = false;
 
                 this.socketIO.connectCount++;
@@ -210,6 +239,7 @@ export default defineComponent({
                 console.log("disconnect");
                 this.socketIO.connectionErrorMsg = `${this.$t("Lost connection to the socket server. Reconnecting...")}`;
                 this.socketIO.connected = false;
+                markDisconnected();
             });
 
             socket.on("connect_error", (err) => {
@@ -219,6 +249,7 @@ export default defineComponent({
                 this.socketIO.connected = false;
                 this.socketIO.firstConnect = false;
                 this.socketIO.connecting = false;
+                markDisconnected();
             });
 
             // Custom Events
