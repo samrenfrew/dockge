@@ -14,24 +14,30 @@
                             <font-awesome-icon icon="terminal" />
                             <span>Bash</span>
                         </router-link>
-                        <button v-if="this.serviceCount > 1 && !isEditMode && status !== 'running' && status !== 'healthy'"
-                                class="btn btn-primary"
-                                :disabled="processing"
-                                @click="startService">
+                        <button
+                            v-if="serviceCount > 1 && !isEditMode && status !== 'running' && status !== 'healthy'"
+                            class="btn btn-primary"
+                            :disabled="processing"
+                            @click="startService"
+                        >
                             <font-awesome-icon icon="play" class="me-1" />
                             <span>{{ $t("startStack") }}</span>
                         </button>
-                        <button v-if="this.serviceCount > 1 && !isEditMode && (status === 'running' || status === 'healthy' || status === 'unhealthy')"
-                                class="btn btn-normal"
-                                :disabled="processing"
-                                @click="stopService">
+                        <button
+                            v-if="serviceCount > 1 && !isEditMode && (status === 'running' || status === 'healthy' || status === 'unhealthy')"
+                            class="btn btn-normal"
+                            :disabled="processing"
+                            @click="stopService"
+                        >
                             <font-awesome-icon icon="stop" class="me-1" />
                             <span>{{ $t("stopStack") }}</span>
                         </button>
-                        <button v-if="this.serviceCount > 1 && !isEditMode && (status === 'running' || status === 'healthy' || status === 'unhealthy')"
-                                class="btn btn-normal"
-                                :disabled="processing"
-                                @click="restartService">
+                        <button
+                            v-if="serviceCount > 1 && !isEditMode && (status === 'running' || status === 'healthy' || status === 'unhealthy')"
+                            class="btn btn-normal"
+                            :disabled="processing"
+                            @click="restartService"
+                        >
                             <font-awesome-icon icon="rotate" class="me-1" />
                             <span>{{ $t("restartStack") }}</span>
                         </button>

@@ -6,7 +6,7 @@
               <div class="flex-grow">
                 <Uptime v-if="!$root.isMobile" :stack="globalStack" :pill="true" class="small" />
                 <span>{{ stack.name }}</span>
-                <span v-if="$root.agentCount > 1" class="agent-name">
+                <span v-if="$root.agentCount > 1 && endpoint !== ''" class="agent-name">
                     ({{ endpointDisplay }})
                 </span>  
               </div>
@@ -127,8 +127,8 @@
 
             <!-- URLs -->
             <div v-if="urls.length > 0" class="mb-3">
-                <a v-for="(url, index) in urls" :key="index" target="_blank" :href="url.url">
-                    <span class="badge bg-secondary me-2">{{ url.display }}</span>
+                <a v-for="(urlItem, index) in urls" :key="index" target="_blank" :href="urlItem.url">
+                    <span class="badge bg-secondary me-2">{{ urlItem.display }}</span>
                 </a>
             </div>
 
@@ -162,8 +162,8 @@
                             <div class="mt-3">
                                 <label for="name" class="form-label">{{ $t("dockgeAgent") }}</label>
                                 <select v-model="stack.endpoint" class="form-select">
-                                    <option v-for="(agent, endpoint) in $root.agentList" :key="endpoint" :value="endpoint" :disabled="$root.agentStatusList[endpoint] != 'online'">
-                                        ({{ $root.agentStatusList[endpoint] }}) {{ (agent.name !== '') ? agent.name : agent.url || $t("Controller") }}
+                                    <option v-for="(agent, agentEndpoint) in $root.agentList" :key="agentEndpoint" :value="agentEndpoint" :disabled="$root.agentStatusList[agentEndpoint] != 'online'">
+                                        ({{ $root.agentStatusList[agentEndpoint] }}) {{ (agent.name !== '') ? agent.name : agent.url || $t("Current") }}
                                     </option>
                                 </select>
                             </div>
@@ -194,7 +194,6 @@
                             :first="name === Object.keys(jsonConfig.services)[0]"
                             :serviceStatus="serviceStatusList[name]"
                             :dockerStats="dockerStats"
-                            :processing="processing"
                             @start-service="startService"
                             @stop-service="stopService"
                             @restart-service="restartService"
@@ -234,34 +233,13 @@
                 <div class="col-lg-6">
                     <!-- Override YAML editor (only show if file exists) -->
                     <div v-if="stack.composeOverrideYAML && stack.composeOverrideYAML.trim() !== ''">
-                    <h4 class="mb-3">{{ stack.composeOverrideFileName || 'compose.override.yaml' }}</h4>
-                    <div class="shadow-box mb-3 editor-box" :class="{'edit-mode' : isEditMode}">
-                        <button v-if="isEditMode" v-b-modal.compose-override-editor-modal class="expand-button">
-                            <font-awesome-icon icon="expand" />
-                        </button>
-                        <code-mirror
-                            ref="overrideEditor"
-                            v-model="stack.composeOverrideYAML"
-                            :extensions="extensions"
-                            minimal
-                            wrap="true"
-                            dark="true"
-                            tab="true"
-                            :disabled="!isEditMode"
-                            :hasFocus="editorFocus"
-                            @change="yamlCodeChange"
-                        />
-                    </div>
-                    <div v-if="isEditMode" class="mb-3">
-                        {{ yamlError }}
-                    </div>
-
-                    <!-- Override modal fullscreen editor (CodeMirror) -->
-                    <BModal id="compose-override-editor-modal" :title="stack.composeOverrideFileName || 'compose.override.yaml'"
-scrollable size="fullscreen" hide-footer>
+                        <h4 class="mb-3">{{ stack.composeOverrideFileName || 'compose.override.yaml' }}</h4>
                         <div class="shadow-box mb-3 editor-box" :class="{'edit-mode' : isEditMode}">
+                            <button v-if="isEditMode" v-b-modal.compose-override-editor-modal class="expand-button">
+                                <font-awesome-icon icon="expand" />
+                            </button>
                             <code-mirror
-                                ref="editorModal"
+                                ref="overrideEditor"
                                 v-model="stack.composeOverrideYAML"
                                 :extensions="extensions"
                                 minimal
@@ -276,19 +254,41 @@ scrollable size="fullscreen" hide-footer>
                         <div v-if="isEditMode" class="mb-3">
                             {{ yamlError }}
                         </div>
-                    </BModal>
 
+                        <!-- Override modal fullscreen editor (CodeMirror) -->
+                        <BModal
+                            id="compose-override-editor-modal" :title="stack.composeOverrideFileName || 'compose.override.yaml'"
+                            scrollable size="fullscreen" hide-footer
+                        >
+                            <div class="shadow-box mb-3 editor-box" :class="{'edit-mode' : isEditMode}">
+                                <code-mirror
+                                    ref="editor"
+                                    v-model="stack.composeOverrideYAML"
+                                    :extensions="extensions"
+                                    minimal
+                                    wrap="true"
+                                    dark="true"
+                                    tab="true"
+                                    :disabled="!isEditMode"
+                                    :hasFocus="editorFocus"
+                                    @change="yamlCodeChange"
+                                />
+                            </div>
+                            <div v-if="isEditMode" class="mb-3">
+                                {{ yamlError }}
+                            </div>
+                        </BModal>
                     </div>
 
                     <h4 class="mb-3">{{ stack.composeFileName }}</h4>
 
-                    <!-- YAML editor (inline) -->
+                    <!-- YAML editor -->
                     <div class="shadow-box mb-3 editor-box" :class="{'edit-mode' : isEditMode}">
                         <button v-if="isEditMode" v-b-modal.compose-editor-modal class="expand-button">
                             <font-awesome-icon icon="expand" />
                         </button>
                         <code-mirror
-                            ref="editorInline"
+                            ref="editor"
                             v-model="stack.composeYAML"
                             :extensions="extensions"
                             minimal
@@ -308,7 +308,7 @@ scrollable size="fullscreen" hide-footer>
                     <BModal id="compose-editor-modal" :title="stack.composeFileName" scrollable size="fullscreen" hide-footer>
                         <div class="shadow-box mb-3 editor-box" :class="{'edit-mode' : isEditMode}">
                             <code-mirror
-                                ref="editorModal"
+                                ref="editor"
                                 v-model="stack.composeYAML"
                                 :extensions="extensions"
                                 minimal
@@ -333,7 +333,7 @@ scrollable size="fullscreen" hide-footer>
                                 <font-awesome-icon icon="expand" />
                             </button>
                             <code-mirror
-                                ref="editorEnv"
+                                ref="editor"
                                 v-model="stack.composeENV"
                                 :extensions="extensionsEnv"
                                 minimal
@@ -351,7 +351,7 @@ scrollable size="fullscreen" hide-footer>
                     <BModal id="env-editor-modal" title=".env" scrollable size="fullscreen" hide-footer>
                         <div class="shadow-box mb-3 editor-box" :class="{'edit-mode' : isEditMode}">
                             <code-mirror
-                                ref="editorEnvModal"
+                                ref="editor"
                                 v-model="stack.composeENV"
                                 :extensions="extensionsEnv"
                                 minimal
@@ -385,8 +385,6 @@ scrollable size="fullscreen" hide-footer>
                             <label for="name" class="form-label"> Search Templates</label>
                             <input id="name" v-model="name" type="text" class="form-control" placeholder="Search..." required>
                         </div>
-
-                        <prism-editor v-if="false" v-model="yamlConfig" class="yaml-editor" :highlight="highlighter" line-numbers @input="yamlCodeChange"></prism-editor>
                     </div>-->
                 </div>
             </div>
@@ -417,9 +415,9 @@ import CodeMirror from "vue-codemirror6";
 import { yaml } from "@codemirror/lang-yaml";
 import { python } from "@codemirror/lang-python";
 import { dracula as editorTheme } from "thememirror";
-import { lineNumbers, EditorView } from "@codemirror/view";
+import { lineNumbers, EditorView, Decoration, ViewPlugin } from "@codemirror/view";
 import { parseDocument, Document } from "yaml";
-
+import { RangeSetBuilder } from "@codemirror/state";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import {
     COMBINED_TERMINAL_COLS,
@@ -450,6 +448,43 @@ let yamlErrorTimeout = null;
 let serviceStatusTimeout = null;
 let dockerStatsTimeout = null;
 
+// Highlight $VAR and ${VAR}
+const variableHighlight = ViewPlugin.fromClass(class {
+    constructor(view) {
+        this.decorations = this.buildDecorations(view);
+    }
+
+    update(update) {
+        if (update.docChanged || update.viewportChanged) {
+            this.decorations = this.buildDecorations(update.view);
+        }
+    }
+
+    buildDecorations(view) {
+        const builder = new RangeSetBuilder();
+
+        for (const { from, to } of view.visibleRanges) {
+            const text = view.state.doc.sliceString(from, to);
+            const variableRegex = /\$\{?[A-Za-z0-9_]+\}?/g;
+            let match;
+            while ((match = variableRegex.exec(text)) !== null) {
+                const start = from + match.index;
+                const end = start + match[0].length;
+
+                builder.add(
+                    start,
+                    end,
+                    Decoration.mark({ class: "cm-variable-highlight" })
+                );
+            }
+        }
+
+        return builder.finish();
+    }
+}, {
+    decorations: v => v.decorations
+});
+
 export default {
     components: {
         NetworkInput,
@@ -474,6 +509,7 @@ export default {
         const extensions = [
             editorTheme,
             yaml(),
+            variableHighlight,
             lineNumbers(),
             EditorView.focusChangeEffect.of(focusEffectHandler)
         ];
@@ -481,6 +517,7 @@ export default {
         const extensionsEnv = [
             editorTheme,
             python(),
+            variableHighlight,
             lineNumbers(),
             EditorView.focusChangeEffect.of(focusEffectHandler)
         ];
@@ -507,8 +544,8 @@ export default {
             },
             serviceStatusList: {},
             dockerStats: {},
-            isEditMode: false,
             errorDelete: false,
+            isEditMode: false,
             submitted: false,
             showDeleteDialog: false,
             deleteStackFiles: false,
@@ -639,7 +676,7 @@ export default {
                 if (!this.editorFocus) {
                     console.debug("jsonConfig changed");
 
-                    const doc = new Document(this.jsonConfig);
+                    let doc = new Document(this.jsonConfig);
 
                     // Stick back the yaml comments
                     if (this.yamlDoc) {
@@ -799,12 +836,12 @@ export default {
                 return;
             }
 
-            const serviceNameList = Object.keys(this.jsonConfig.services);
+            let serviceNameList = Object.keys(this.jsonConfig.services);
 
             // Set the stack name if empty, use the first container name
             if (!this.stack.name && serviceNameList.length > 0) {
-                const serviceName = serviceNameList[0];
-                const service = this.jsonConfig.services[serviceName];
+                let serviceName = serviceNameList[0];
+                let service = this.jsonConfig.services[serviceName];
 
                 if (service && service.container_name) {
                     this.stack.name = service.container_name;
@@ -911,7 +948,7 @@ export default {
         },
 
         yamlToJSON(yaml) {
-            const doc = parseDocument(yaml);
+            let doc = parseDocument(yaml);
             if (doc.errors.length > 0) {
                 throw doc.errors[0];
             }
@@ -936,13 +973,13 @@ export default {
 
         yamlCodeChange() {
             try {
-                const { config, doc } = this.yamlToJSON(this.stack.composeYAML);
+                let { config, doc } = this.yamlToJSON(this.stack.composeYAML);
 
                 this.yamlDoc = doc;
                 this.jsonConfig = config;
 
-                const env = dotenv.parse(this.stack.composeENV);
-                const envYAML = envsubstYAML(this.stack.composeYAML, env);
+                let env = dotenv.parse(this.stack.composeENV);
+                let envYAML = envsubstYAML(this.stack.composeYAML, env);
                 this.envsubstJSONConfig = this.yamlToJSON(envYAML).config;
 
                 clearTimeout(yamlErrorTimeout);
@@ -966,7 +1003,7 @@ export default {
         },
 
         checkYAML() {
-
+            // TODO: implement validation
         },
 
         addContainer() {
@@ -986,7 +1023,7 @@ export default {
                 restart: "unless-stopped",
             };
             this.newContainerName = "";
-            const element = this.$refs.containerList.lastElementChild;
+            let element = this.$refs.containerList.lastElementChild;
             element.scrollIntoView({
                 block: "start",
                 behavior: "smooth"
@@ -1044,6 +1081,11 @@ export default {
 
 .terminal {
     height: 200px;
+}
+
+:deep(.cm-variable-highlight) {
+    color: #fe6000;
+    font-weight: 600;
 }
 
 .editor-box {
